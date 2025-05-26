@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium STK Push Tester | Payment Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+   
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="logo-text">PushPay</div>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">STK Push Tester</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" data-tab="stk">STK Push</div>
+                    <div class="tab" data-tab="query">Query Payment</div>
+                </div>
+                
+                <div class="tab-content active" id="stk-tab">
+                    <form id="stkForm">
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control" placeholder="e.g. 254712345678" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="amount" class="form-label">Amount</label>
+                            <input type="number" id="amount" class="form-control" placeholder="e.g. 100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="account" class="form-label">Account Reference</label>
+                            <input type="text" id="account" class="form-control" placeholder="e.g. INV-001" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description" class="form-label">Transaction Description</label>
+                            <input type="text" id="description" class="form-control" placeholder="e.g. Payment for services" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Initiate STK Push
+                        </button>
+                    </form>
+                    
+                    <div class="loader" id="stkLoader">
+                        <div class="spinner"></div>
+                        <p>Processing payment request...</p>
+                    </div>
+                    
+                    <div class="response-container" id="stkResponse" style="display: none;">
+                        <h3 class="response-title">
+                            <i class="fas fa-server"></i> API Response
+                        </h3>
+                        <div class="response-content" id="stkResponseContent"></div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="query-tab">
+                    <form id="queryForm">
+                        <div class="form-group">
+                            <label for="checkoutId" class="form-label">Checkout Request ID</label>
+                            <input type="text" id="checkoutId" class="form-control" placeholder="e.g. ws_CO_123456789" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Query Payment Status
+                        </button>
+                    </form>
+                    
+                    <div class="loader" id="queryLoader">
+                        <div class="spinner"></div>
+                        <p>Checking payment status...</p>
+                    </div>
+                    
+                    <div class="response-container" id="queryResponse" style="display: none;">
+                        <h3 class="response-title">
+                            <i class="fas fa-server"></i> API Response
+                        </h3>
+                        <div class="response-content" id="queryResponseContent"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Transaction History</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle success"></i>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Successful</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-spinner pending"></i>
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-times-circle failed"></i>
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                </div>
+                
+                <div class="transaction-history">
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>Order #12345</h4>
+                                <p>Today, 10:45 AM</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="transaction-amount success">KES 1,250</div>
+                            <span class="status-badge success-bg">Completed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon">
+                                <i class="fas fa-subscription"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>Monthly Subscription</h4>
+                                <p>Yesterday, 2:30 PM</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="transaction-amount success">KES 500</div>
+                            <span class="status-badge success-bg">Completed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>Order #12344</h4>
+                                <p>Yesterday, 11:20 AM</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="transaction-amount failed">KES 750</div>
+                            <span class="status-badge failed-bg">Failed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>Order #12343</h4>
+                                <p>May 24, 9:15 AM</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="transaction-amount pending">KES 2,000</div>
+                            <span class="status-badge pending-bg">Pending</span>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>Order #12342</h4>
+                                <p>May 23, 4:45 PM</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="transaction-amount success">KES 3,500</div>
+                            <span class="status-badge success-bg">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="../static/index.js"></script>
+</body>
+</html>
