@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, send_from_directory
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -7,9 +7,6 @@ from .extensions import db, migrate
 from .models import Transaction
 from .mpesa import MpesaGateway
 from flask_cors import CORS
-
-
-load_dotenv()
 
 
 load_dotenv()
@@ -141,6 +138,16 @@ def mpesa_callback():
     except Exception as e:
         logger.error(f"Callback Error: {str(e)}")
         return jsonify({'ResultCode': 1, 'ResultDesc': str(e)})
+    
+# Serve Frontend
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    if path and os.path.exists(os.path.join(app.template_folder, path)):
+        return send_from_directory(app.template_folder, path)
+    return render_template('index.html')
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

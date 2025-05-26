@@ -417,4 +417,9 @@
         body.dark-mode .tab.active::after {
             background-color: var(--accent);
         }
+     
+        body.dark-mode .dashboard .card-title {
+            color: #f0f0f0;
+        }
+        
     
