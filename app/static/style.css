@@ -397,6 +397,9 @@
             background-color: #3a3a3a;
             border-left-color: var(--accent);
         }
+        body.dark-mode .response-content {
+            color: #f0f0f0;
+        }
         
         body.dark-mode .transaction-item {
             border-bottom-color: #444;
