@@ -1,32 +1,20 @@
-from flask import Flask, jsonify, request, render_template, send_from_directory
+from flask import jsonify, request, render_template, send_from_directory
 from datetime import datetime
 import os
 from dotenv import load_dotenv
 import logging
-from .extensions import db, migrate
+from .extensions import db
 from .models import Transaction
 from .mpesa import MpesaGateway
-from flask_cors import CORS
+from flask import Blueprint, current_app as app
+
+
+bp = Blueprint('main', __name__)
 
 
 load_dotenv()
 
-def create_app():
-    app = Flask(__name__)
-    CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
-    # Initialize extensions with app
-    db.init_app(app)
-    migrate.init_app(app, db)
-    
-    with app.app_context():
-        db.create_all()
-    
-    return app
 
-app = create_app()
 
 # Configure logging
 logging.basicConfig(
@@ -45,7 +33,7 @@ mpesa = MpesaGateway(
     callback_url=os.getenv('MPESA_CALLBACK_URL')
 )
 
-@app.route('/api/stk-push', methods=['POST'])
+@bp.route('/api/stk-push', methods=['POST'])
 def stk_push():
     try:
         data = request.get_json()
@@ -79,7 +67,7 @@ def stk_push():
         logger.error(f"STK Push Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/query-payment', methods=['POST'])
+@bp.route('/api/query-payment', methods=['POST'])
 def query_payment():
     try:
         data = request.get_json()
@@ -111,7 +99,7 @@ def query_payment():
         logger.error(f"Query Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/transactions', methods=['GET'])
+@bp.route('/api/transactions', methods=['GET'])
 def get_transactions():
     try:
         transactions = Transaction.query.order_by(Transaction.created_at.desc()).all()
@@ -120,7 +108,7 @@ def get_transactions():
         logger.error(f"Transactions Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/mpesa-callback', methods=['POST'])
+@bp.route('/mpesa-callback', methods=['POST'])
 def mpesa_callback():
     try:
         data = request.get_json()
@@ -140,8 +128,8 @@ def mpesa_callback():
         return jsonify({'ResultCode': 1, 'ResultDesc': str(e)})
     
 # Serve Frontend
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+@bp.route('/', defaults={'path': ''})
+@bp.route('/<path:path>')
 def serve_frontend(path):
     if path and os.path.exists(os.path.join(app.template_folder, path)):
         return send_from_directory(app.template_folder, path)
